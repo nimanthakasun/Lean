@@ -66,6 +66,11 @@ namespace QuantConnect.Orders
         public DateTime Time { get; internal set; }
 
         /// <summary>
+        /// Time the order was last modified, including updating the order and/or receiving fills and/or status changes
+        /// </summary>
+        public DateTime ModifiedTime { get; internal set; }
+
+        /// <summary>
         /// Number of shares to execute.
         /// </summary>
         public decimal Quantity
@@ -165,6 +170,7 @@ namespace QuantConnect.Orders
         protected Order()
         {
             Time = new DateTime();
+            ModifiedTime = Time;
             Price = 0;
             PriceCurrency = string.Empty;
             Quantity = 0;
@@ -189,6 +195,7 @@ namespace QuantConnect.Orders
         protected Order(Symbol symbol, decimal quantity, DateTime time, string tag = "", IOrderProperties properties = null)
         {
             Time = time;
+            ModifiedTime = Time;
             Price = 0;
             PriceCurrency = string.Empty;
             Quantity = quantity;
@@ -268,6 +275,7 @@ namespace QuantConnect.Orders
         {
             order.Id = Id;
             order.Time = Time;
+            order.ModifiedTime = ModifiedTime;
             order.BrokerId = BrokerId.ToList();
             order.ContingentId = ContingentId;
             order.TimeInForce = TimeInForce;

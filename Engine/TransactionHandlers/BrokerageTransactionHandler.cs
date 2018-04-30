@@ -894,6 +894,9 @@ namespace QuantConnect.Lean.Engine.TransactionHandlers
             // set the status of our order object based on the fill event
             order.Status = fill.Status;
 
+            // set the modified time of the order to the fill's timestamp
+            order.ModifiedTime = fill.UtcTime;
+
             // save that the order event took place, we're initializing the list with a capacity of 2 to reduce number of mallocs
             //these hog memory
             //List<OrderEvent> orderEvents = _orderEvents.GetOrAdd(orderEvent.OrderId, i => new List<OrderEvent>(2));
