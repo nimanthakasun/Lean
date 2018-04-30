@@ -92,7 +92,7 @@ namespace QuantConnect.Algorithm.CSharp
                 {
                     limitPrice = !isLong ? (1 + LimitPercentage) * data.Bars[symbol].High : (1 - LimitPercentage) * data.Bars[symbol].Low;
                 }
-                var request = new SubmitOrderRequest(orderType, SecType, symbol, Quantity, stopPrice, limitPrice, Time, orderType.ToString());
+                var request = new SubmitOrderRequest(orderType, SecType, symbol, Quantity, stopPrice, limitPrice, UtcTime, orderType.ToString());
                 var ticket = Transactions.AddOrder(request);
                 _tickets.Add(ticket);
             }
@@ -140,6 +140,16 @@ namespace QuantConnect.Algorithm.CSharp
 
         public override void OnOrderEvent(OrderEvent orderEvent)
         {
+            // if the order time isn't equal to the algo time, then the modified time on the order should be updated
+            var order = Transactions.GetOrderById(orderEvent.OrderId);
+            if (order.Time != UtcTime)
+            {
+                if (order.Time == order.ModifiedTime)
+                {
+                    throw new Exception("Expected order.Time and order.ModifiedTime to be different");
+                }
+            }
+
             if (orderEvent.Status == OrderStatus.Filled)
             {
                 Log("FILLED:: " + Transactions.GetOrderById(orderEvent.OrderId) + " FILL PRICE:: " + orderEvent.FillPrice.SmartRounding());
