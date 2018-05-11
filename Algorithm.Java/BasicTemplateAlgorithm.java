@@ -1,4 +1,4 @@
-package QuantConnect;
+/**/package QuantConnect;
 import cli.QuantConnect.Resolution;
 import cli.QuantConnect.SecurityType;
 import cli.QuantConnect.Algorithm.QCAlgorithm;
